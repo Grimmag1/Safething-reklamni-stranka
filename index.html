@@ -527,14 +527,15 @@
             if (res.ok) {
                 goToStep(5);
             } else {
+                const body = await res.json().catch(() => ({}));
                 btn.disabled = false;
                 btn.textContent = 'Nastartovat svou kariéru';
-                alert('Odeslání se nezdařilo. Zkuste to prosím znovu.');
+                alert('Chyba ' + res.status + ': ' + (body.error || JSON.stringify(body)));
             }
-        } catch {
+        } catch (err) {
             btn.disabled = false;
             btn.textContent = 'Nastartovat svou kariéru';
-            alert('Chyba připojení. Zkontrolujte internet a zkuste znovu.');
+            alert('Chyba připojení: ' + err.message);
         }
     });
 
