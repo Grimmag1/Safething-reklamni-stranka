@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeThing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            min-height: 100svh; /* shrinks with mobile browser chrome */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        /* ── Steps ─────────────────────────────────────────── */
+        .step {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        /* ── Shared card ────────────────────────────────────── */
+        .card {
+            background: rgb(255, 255, 0);
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .card h1 {
+            font-size: 1.8rem;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* ── Button ─────────────────────────────────────────── */
+        .btn {
+            background: #9b9b9b;
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.97); background: #5a5a5a; }
+
+        /* ── Step 2 — pictures ──────────────────────────────── */
+        #step2 { max-width: 680px; }
+
+        .instruction {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .picture-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .picture-item {
+            background: #16213e;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .picture-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* shown when no image is set yet */
+        .picture-item .placeholder-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 16px;
+            pointer-events: none;
+        }
+
+        /* ── Step 3 — question ──────────────────────────────── */
+        #step3 { max-width: 600px; }
+
+        .question-card {
+            background: rgb(255, 255, 0);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .question-card h2 {
+            font-size: 1.35rem;
+            color: #000000;
+            margin-bottom: 28px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px 20px; /* taller tap target */
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            font-family: inherit;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .option:active {
+            border-color: #5a5a5a;
+            background: #ffffff;
+        }
+
+        /* ── Step 4 — congrats + form ───────────────────────── */
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px; /* must be 16px+ to prevent iOS auto-zoom on focus */
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+
+        .form-submit {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* ── Wrong-answer animation ─────────────────────────── */
+        .wrong {
+            border-color: #e94560 !important;
+            background: #ffe0e6 !important;
+            animation: shake 0.4s;
+        }
+
+        /* ── Correct-answer animation ────────────────────────── */
+        .correct {
+            border-color: #2ecc71 !important;
+            box-shadow: 0 0 16px rgba(46, 204, 113, 0.6) !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25%       { transform: translateX(-8px); }
+            75%       { transform: translateX(8px); }
+        }
+
+        /* ── Hover effects — only on devices that have a pointer ── */
+        @media (hover: hover) {
+            .btn:hover         { background: #5a5a5a; }
+            .picture-item:hover {
+                transform: scale(1.03);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            }
+            .option:hover {
+                border-color: #5a5a5a;
+                background: #ffffff;
+            }
+        }
+
+        /* ── Small screens ──────────────────────────────────────── */
+        @media (max-width: 480px) {
+            .step         { padding: 12px; }
+            .card         { padding: 32px 20px; border-radius: 12px; }
+            .card h1      { font-size: 1.4rem; }
+            .card p       { font-size: 0.95rem; margin-bottom: 24px; }
+            .question-card { padding: 28px 16px; border-radius: 12px; }
+            .question-card h2 { font-size: 1.15rem; margin-bottom: 20px; }
+            .picture-grid { gap: 10px; }
+            .instruction  { font-size: 1rem; margin-bottom: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     Intro window
+════════════════════════════════════════════════════════════ -->
+<div id="step1" class="step active">
+    <div class="card">
+        <h1>VSTUP DO SVĚTA BEZPEČNOSTI!</h1>
+        <p>Dokaž, že máš na to stát bezpečákem.</p>
+        <button class="btn" onclick="goToStep(2)">Začít</button>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     Picture selection window
+════════════════════════════════════════════════════════════ -->
+<div id="step2" class="step">
+    <p class="instruction">Který z těchto obrázků představuje nebezpečný způsob práce?</p>
+
+    <div class="picture-grid">
+
+        <div class="picture-item" correct="false" onclick="handlePicture(this)">
+            <img src="./images/img1.jpeg">
+        </div>
+
+        <div class="picture-item" correct="true" onclick="handlePicture(this)">
+            <img src="./images/img2.jpeg">
+        </div>
+
+        <div class="picture-item" correct="false" onclick="handlePicture(this)">
+            <img src="./images/img3.jpeg">
+        </div>
+
+        <div class="picture-item" correct="false" onclick="handlePicture(this)">
+            <img src="./images/img4.jpeg">
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     Question window
+════════════════════════════════════════════════════════════ -->
+<div id="step3" class="step">
+    <div class="question-card">
+        <h2>Která z následujících možností je správná?</h2>
+        <div class="options">
+            <button class="option" correct="false" onclick="handleOption(this)">Býlý kůň</button>
+            <button class="option" correct="true"  onclick="handleOption(this)">Bílý kůň</button>
+            <button class="option" correct="false" onclick="handleOption(this)">Bílí kůň</button>
+            <button class="option" correct="false" onclick="handleOption(this)">Býlí kůň</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     Final window
+════════════════════════════════════════════════════════════ -->
+<div id="step4" class="step">
+    <div class="card">
+        <h1>Gratulujeme!</h1>
+        <p>Dokázal jsi, že máš na to stát se bezpečákem.</p>
+
+        <!-- Formspree form — sign up at formspree.io and replace YOUR_FORM_ID -->
+        <form action="https://formspree.io/f/xwvnyrzk" method="POST">
+
+            <div class="form-group">
+                <label for="name">Jméno</label>
+                <input id="name" type="text" name="name" placeholder="Vaše jméno" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="text" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input id="phone" type="text" name="phone" placeholder="+420 123 456 789">
+            </div>
+
+            <button type="submit" class="btn form-submit">Nastartovat svou kariéru</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function goToStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + n).classList.add('active');
+    }
+
+    function handlePicture(el) {
+        if (el.getAttribute('correct') === 'true') {
+            el.classList.add('correct');
+            setTimeout(() => goToStep(3), 500);
+        } else {
+            el.classList.add('wrong');
+            setTimeout(() => el.classList.remove('wrong'), 500);
+        }
+    }
+
+    function handleOption(el) {
+        if (el.getAttribute('correct') === 'true') {
+            el.classList.add('correct');
+            setTimeout(() => goToStep(4), 500);
+        } else {
+            el.classList.add('wrong');
+            setTimeout(() => el.classList.remove('wrong'), 500);
+        }
+    }
+</script>
+
+</body>
+</html>
