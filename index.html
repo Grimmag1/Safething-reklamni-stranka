@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SafeThing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,10 +15,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background: #000000;
+            background-image: radial-gradient(ellipse at 50% 20%, #1f1a00 0%, #000000 60%);
             min-height: 100vh;
-            min-height: 100svh; /* shrinks with mobile browser chrome */
+            min-height: 100svh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -33,77 +37,95 @@
 
         .step.active {
             display: flex;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         /* ── Shared card ────────────────────────────────────── */
         .card {
-            background: rgb(255, 255, 0);
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            border-top: 4px solid #FFD600;
             border-radius: 16px;
             padding: 48px 40px;
             text-align: center;
             max-width: 520px;
             width: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7),
+                        0 0 0 1px rgba(255, 214, 0, 0.06);
         }
 
         .card h1 {
-            font-size: 1.8rem;
-            color: #000000;
-            margin-bottom: 16px;
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: #FFD600;
+            margin-bottom: 14px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
         }
 
         .card p {
-            color: #555;
+            color: #888888;
             line-height: 1.7;
             margin-bottom: 32px;
+            font-size: 1rem;
         }
 
         /* ── Button ─────────────────────────────────────────── */
         .btn {
-            background: #9b9b9b;
-            color: white;
+            background: #FFD600;
+            color: #000000;
             border: none;
             padding: 16px 36px;
             border-radius: 8px;
             font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            letter-spacing: 0.01em;
         }
 
-        .btn:active { transform: scale(0.97); background: #5a5a5a; }
+        .btn:active { transform: scale(0.97); background: #e6c200; }
 
         /* ── Step 2 — pictures ──────────────────────────────── */
         #step2 { max-width: 680px; }
 
         .instruction {
-            color: #ccc;
-            font-size: 1.1rem;
-            margin-bottom: 24px;
+            color: #FFD600;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 20px;
             text-align: center;
+            letter-spacing: 0.01em;
         }
 
         .picture-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
             width: 100%;
         }
 
         .picture-item {
-            background: #16213e;
+            background: #1a1a1a;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            border: 3px solid transparent;
+            border: 2px solid #2a2a2a;
             aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
 
         .picture-item img {
@@ -113,9 +135,8 @@
             display: block;
         }
 
-        /* shown when no image is set yet */
         .picture-item .placeholder-label {
-            color: #666;
+            color: #444;
             font-size: 0.85rem;
             text-align: center;
             padding: 16px;
@@ -126,43 +147,48 @@
         #step3 { max-width: 600px; }
 
         .question-card {
-            background: rgb(255, 255, 0);
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            border-top: 4px solid #FFD600;
             border-radius: 16px;
             padding: 40px;
             width: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
         }
 
         .question-card h2 {
-            font-size: 1.35rem;
-            color: #000000;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 28px;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .option {
-            background: #f5f5f5;
-            border: 2px solid #e0e0e0;
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
             border-radius: 8px;
-            padding: 16px 20px; /* taller tap target */
+            padding: 16px 20px;
             cursor: pointer;
             text-align: left;
             font-size: 1rem;
             font-family: inherit;
+            color: #bbbbbb;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
-            transition: border-color 0.2s, background 0.2s;
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
         }
 
         .option:active {
-            border-color: #5a5a5a;
-            background: #ffffff;
+            border-color: #FFD600;
+            background: #1f1c00;
+            color: #ffffff;
         }
 
         /* ── Step 4 — congrats + form ───────────────────────── */
@@ -174,74 +200,89 @@
         .form-group label {
             display: block;
             margin-bottom: 6px;
-            color: #333;
-            font-size: 0.9rem;
-            font-weight: 600;
+            color: #666666;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
         }
 
         .form-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #2a2a2a;
             border-radius: 8px;
-            font-size: 16px; /* must be 16px+ to prevent iOS auto-zoom on focus */
+            font-size: 16px;
             font-family: inherit;
+            background: #1a1a1a;
+            color: #ffffff;
             transition: border-color 0.2s;
         }
 
+        .form-group input::placeholder { color: #3a3a3a; }
+
         .form-group input:focus {
             outline: none;
-            border-color: #e94560;
+            border-color: #FFD600;
         }
 
         .form-submit {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 12px;
         }
 
         /* ── Wrong-answer animation ─────────────────────────── */
         .wrong {
-            border-color: #e94560 !important;
-            background: #ffe0e6 !important;
-            animation: shake 0.4s;
+            border-color: #cc3344 !important;
+            background: rgba(204, 51, 68, 0.12) !important;
+            animation: wrong_shake 0.4s;
         }
-
+        @keyframes wrong_shake {
+            0%, 100% { transform: translateX(0); }
+            25%       { transform: translateX(-6px); }
+            75%       { transform: translateX(6px); }
+        }
         /* ── Correct-answer animation ────────────────────────── */
         .correct {
-            border-color: #2ecc71 !important;
-            box-shadow: 0 0 16px rgba(46, 204, 113, 0.6) !important;
-            animation: shake 0.4s;
+            border-color: #FFD600 !important;
+            box-shadow: 0 0 24px rgba(255, 214, 0, 0.45) !important;
+            animation: correct_shake 0.4s;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25%       { transform: translateX(-8px); }
-            75%       { transform: translateX(8px); }
+        @keyframes correct_shake {
+            0%, 100% { transform: translateY(0); }
+            25%       { transform: translateY(-8px); }
+            75%       { transform: translateY(8px); }
         }
 
         /* ── Hover effects — only on devices that have a pointer ── */
         @media (hover: hover) {
-            .btn:hover         { background: #5a5a5a; }
+            .btn:hover {
+                background: #ffe033;
+                box-shadow: 0 4px 24px rgba(255, 214, 0, 0.35);
+            }
             .picture-item:hover {
-                transform: scale(1.03);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+                border-color: #FFD600;
+                box-shadow: 0 0 22px rgba(255, 214, 0, 0.22);
+                transform: scale(1.02);
             }
             .option:hover {
-                border-color: #5a5a5a;
-                background: #ffffff;
+                border-color: #FFD600;
+                background: #1a1800;
+                color: #ffffff;
             }
         }
 
         /* ── Small screens ──────────────────────────────────────── */
         @media (max-width: 480px) {
-            .step         { padding: 12px; }
-            .card         { padding: 32px 20px; border-radius: 12px; }
-            .card h1      { font-size: 1.4rem; }
-            .card p       { font-size: 0.95rem; margin-bottom: 24px; }
+            .step          { padding: 12px; }
+            .card          { padding: 32px 20px; border-radius: 12px; }
+            .card h1       { font-size: 1.45rem; }
+            .card p        { font-size: 0.95rem; margin-bottom: 24px; }
             .question-card { padding: 28px 16px; border-radius: 12px; }
-            .question-card h2 { font-size: 1.15rem; margin-bottom: 20px; }
-            .picture-grid { gap: 10px; }
-            .instruction  { font-size: 1rem; margin-bottom: 16px; }
+            .question-card h2 { font-size: 1.1rem; margin-bottom: 20px; }
+            .picture-grid  { gap: 10px; }
+            .instruction   { font-size: 0.95rem; margin-bottom: 14px; }
         }
     </style>
 </head>
@@ -314,6 +355,8 @@
         <!-- Formspree form — sign up at formspree.io and replace YOUR_FORM_ID -->
         <form action="https://formspree.io/f/xwvnyrzk" method="POST">
 
+            <input type="hidden" name="_next" value="https://grimmag1.github.io/Propaga-n--str-nka/?submitted=true">
+
             <div class="form-group">
                 <label for="name">Jméno</label>
                 <input id="name" type="text" name="name" placeholder="Vaše jméno" required>
@@ -335,7 +378,23 @@
 </div>
 
 
+<!-- ═══════════════════════════════════════════════════════════
+     Thank-you window
+════════════════════════════════════════════════════════════ -->
+<div id="step5" class="step">
+    <div class="card">
+        <h1>Děkujeme!</h1>
+        <p>Tvé údaje jsme přijali. Brzy se ti ozveme.</p>
+    </div>
+</div>
+
+
 <script>
+    // If returning from Formspree, skip straight to the thank-you screen
+    if (new URLSearchParams(window.location.search).get('submitted') === 'true') {
+        goToStep(5);
+    }
+
     function goToStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + n).classList.add('active');
