@@ -357,7 +357,7 @@
 <div id="step1" class="step active">
     <div class="card">
         <h1>VSTUP DO SVĚTA BEZPEČNOSTI!</h1>
-        <p>Dokaž, že máš na to stát bezpečákem.</p>
+        <p>Dokaž, že máš na to stát se bezpečákem.</p>
         <button class="btn" onclick="goToStep(2)">Začít</button>
     </div>
 </div>
@@ -367,12 +367,12 @@
      Picture selection window
 ════════════════════════════════════════════════════════════ -->
 <div id="step2" class="step">
-    <p class="instruction">Který z těchto obrázků představuje nebezpečný způsob práce?</p>
+    <p class="instruction">Který z těchto obrázků splňuje BOZP?</p>
 
     <div class="picture-grid">
 
         <div class="picture-item" correct="false" onclick="handlePicture(this)">
-            <img src="./images/img1.jpeg">
+            <img src="./images/img1.jpeg" style="object-position: center top">
         </div>
 
         <div class="picture-item" correct="true" onclick="handlePicture(this)">
@@ -380,7 +380,7 @@
         </div>
 
         <div class="picture-item" correct="false" onclick="handlePicture(this)">
-            <img src="./images/img3.jpeg">
+            <img src="./images/img3.jpeg" style="object-position: left center">
         </div>
 
         <div class="picture-item" correct="false" onclick="handlePicture(this)">
@@ -396,12 +396,12 @@
 ════════════════════════════════════════════════════════════ -->
 <div id="step3" class="step">
     <div class="question-card">
-        <h2>Která z následujících možností je správná?</h2>
+        <h2>Co je nejčastější příčinou pracovních úrazů?</h2>
         <div class="options">
-            <button class="option" correct="false" onclick="handleOption(this)">Býlý kůň</button>
-            <button class="option" correct="true"  onclick="handleOption(this)">Bílý kůň</button>
-            <button class="option" correct="false" onclick="handleOption(this)">Bílí kůň</button>
-            <button class="option" correct="false" onclick="handleOption(this)">Býlí kůň</button>
+            <button class="option" correct="false" onclick="handleOption(this)">Smůla</button>
+            <button class="option" correct="true"  onclick="handleOption(this)">Lidský faktor (podcenění rizika)</button>
+            <button class="option" correct="false" onclick="handleOption(this)">Dodržování BOZP</button>
+            <button class="option" correct="false" onclick="handleOption(this)">Špatné počasí</button>
         </div>
     </div>
 </div>
